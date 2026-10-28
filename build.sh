@@ -12,7 +12,7 @@ for r in "${REPOS[@]}"; do
     || { echo "skip $r: no altstore-source.json in its latest release" >&2; rm -f "$tmp/$r.json"; }
 done
 jq -s '{ name: "FIZL0", identifier: "io.github.fizl0", sourceURL: "https://fizl0.github.io/apps/source.json",
-         website: "https://fizl0.github.io/apps/", subtitle: "Open remasters by FIZL0",
+         website: "https://fizl0.github.io/apps/", iconURL: "https://avatars.githubusercontent.com/u/48865825?v=4", subtitle: "Open remasters by FIZL0",
          apps: (map(.apps) | add // []), news: (map(.news // []) | add // []) }' "$tmp"/*.json >"$out/source.json"
 cp index.html "$out/"
 jq -r '.apps[] | "\(.name) \(.version)"' "$out/source.json"
