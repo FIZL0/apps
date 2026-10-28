@@ -1,0 +1,16 @@
+name: source
+on:
+  push: { branches: [main] }
+  schedule: [{ cron: '17 * * * *' }]  # ponytail: hourly poll; apps' release scripts also kick it with `gh workflow run`
+  workflow_dispatch:
+permissions: { contents: read, pages: write, id-token: write }
+concurrency: { group: pages, cancel-in-progress: false }
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: { name: github-pages }
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./build.sh _site
+      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/deploy-pages@v4

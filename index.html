@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FIZL0 Apps</title>
+<meta name="description" content="Add the FIZL0 source to AltStore, SideStore or Feather to install and update every FIZL0 iPhone / iPad app.">
+<style>
+  :root { --ink: #1b1d22; --paper: #f6f3ea; --panel: #fff; --muted: #4c5260; --green: #2fae4a; color-scheme: light; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #ecebe6; --paper: #15171b; --panel: #22252b; --muted: #a7acb6; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --ink: #ecebe6; --paper: #15171b; --panel: #22252b; --muted: #a7acb6; color-scheme: dark; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 500 16px/1.5 ui-rounded, system-ui, sans-serif; }
+  main { max-width: 520px; margin: 0 auto; padding: max(24px, env(safe-area-inset-top)) 16px 32px; }
+  h1 { margin: 0 0 8px; font-size: 1.5em; }
+  .muted { color: var(--muted); font-size: .92em; }
+  .btn { display: block; box-sizing: border-box; width: 100%; margin: 10px 0; padding: .8em 1em; border-radius: 999px;
+         border: 3px solid var(--ink); background: var(--panel); color: var(--ink); font: inherit; font-weight: 800;
+         text-align: center; text-decoration: none; cursor: pointer; }
+  .btn.main { background: var(--green); color: #fff; }
+  code { display: block; overflow-wrap: anywhere; padding: .6em .8em; border-radius: 10px; background: var(--panel);
+         border: 2px solid var(--muted); font-size: .85em; }
+  ul { list-style: none; padding: 0; }
+  li { display: flex; gap: 12px; align-items: center; margin: 10px 0; }
+  li img { width: 48px; height: 48px; border-radius: 11px; border: 2px solid var(--ink); }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+  <h1>FIZL0 apps for iPhone&nbsp;/&nbsp;iPad</h1>
+  <p>Add this source to your sideloading app once, then install any of the apps below and get every update from there.</p>
+  <a class="btn main" id="feather">Add to Feather</a>
+  <a class="btn" id="altstore">Add to AltStore</a>
+  <a class="btn" id="sidestore">Add to SideStore</a>
+  <button class="btn" id="copy" type="button">Copy source URL</button>
+  <code id="url"></code>
+  <p class="muted">Nothing happens when you tap? Open this page in Safari on the iPhone with the app installed, or copy
+    the URL and add it under Sources in the app.</p>
+  <ul id="apps"></ul>
+</main>
+<script>
+  const src = new URL('source.json', location.href).href;
+  const q = encodeURIComponent(src);
+  document.getElementById('url').textContent = src;
+  document.getElementById('feather').href = 'feather://source/' + src;
+  document.getElementById('altstore').href = 'altstore://source?url=' + q;
+  document.getElementById('sidestore').href = 'sidestore://source?url=' + q;
+  const copy = document.getElementById('copy');
+  copy.onclick = () => navigator.clipboard.writeText(src).then(() => { copy.textContent = 'Copied'; },
+    () => { getSelection().selectAllChildren(document.getElementById('url')); copy.textContent = 'Select and copy the URL below'; });
+  fetch('source.json').then(r => r.json()).then(s => {
+    for (const a of s.apps) {
+      const li = document.createElement('li'), img = document.createElement('img'), t = document.createElement('div');
+      img.src = a.iconURL; img.alt = '';
+      t.innerHTML = '<b></b> <span class="muted"></span><br><span class="muted"></span>';
+      t.children[0].textContent = a.name; t.children[1].textContent = a.version; t.children[3].textContent = a.subtitle || '';
+      li.append(img, t); document.getElementById('apps').append(li);
+    }
+  }).catch(() => {});
+</script>
+</body>
+</html>
