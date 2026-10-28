@@ -3,7 +3,7 @@
 # Each app's own release ships an altstore-source.json; this merges their apps into OUT/source.json.
 # An app joins by adding its repo to REPOS once its releases carry that file; repos without one are skipped.
 set -euo pipefail
-REPOS=(opentennis openmx)
+REPOS=(opentennis openmx partyboard)
 out=${1:-_site}
 mkdir -p "$out"
 tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
