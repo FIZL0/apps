@@ -82,7 +82,7 @@
   const q = encodeURIComponent(src);
   const $ = (id) => document.getElementById(id);
   $('url').textContent = src;
-  // The installed app only answers cydian:// (no universal links yet). Try it; if Safari never went to the
+  // The installed app only answers ifizbox:// (no universal links yet). Try it; if Safari never went to the
   // background, iFizBox isn't installed: open ifizbox.com's Home, which offers to install it (?install).
   $('ifizbox').href = 'https://ifizbox.com/?install';
   $('ifizbox').onclick = (e) => {
@@ -91,7 +91,7 @@
     const away = () => { left = true; };
     addEventListener('pagehide', away, { once: true });
     document.addEventListener('visibilitychange', () => { if (document.hidden) left = true; }, { once: true });
-    location.href = 'cydian://add?url=' + q;
+    location.href = 'ifizbox://add?url=' + q;
     setTimeout(() => { if (!left && !document.hidden) location.href = $('ifizbox').href; }, 1500);
   };
   $('feather').href = 'feather://source/' + src;
