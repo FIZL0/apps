@@ -49,6 +49,10 @@
   .apps .meta { font-size: .8rem; color: var(--muted); margin-top: 2px; }
   .tag { display: inline-block; padding: 1px 7px; margin-right: 6px; border-radius: 6px; font-size: .75rem; font-weight: 600; color: #fff; }
   footer { margin: 20px 4px 0; }
+  dialog { border: 0; border-radius: 18px; padding: 20px; width: min(320px, calc(100% - 32px)); box-sizing: border-box;
+           background: var(--card); color: var(--ink); text-align: center; }
+  dialog::backdrop { background: rgba(0,0,0,.4); }
+  dialog .btn { margin-top: 8px; text-decoration: none; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -77,23 +81,32 @@
   <footer class="muted">Nothing happens when you tap? Open this page in Safari on the iPhone with the app installed,
     or copy the URL and add it under Sources in the app.</footer>
 </main>
+<dialog id="nofiz">
+  <b>Don't have iFizBox?</b>
+  <p class="muted">Install it, then tap Add to iFizBox again.</p>
+  <a class="btn" href="https://ifizbox.com/?install">Install iFizBox</a>
+  <button class="btn" id="nofiz-no" type="button">Not Now</button>
+</dialog>
 <script>
   const src = new URL('source.json', location.href).href;
   const q = encodeURIComponent(src);
   const $ = (id) => document.getElementById(id);
   $('url').textContent = src;
-  // The installed app only answers ifizbox:// (no universal links yet). Try it; if Safari never went to the
-  // background, iFizBox isn't installed: open ifizbox.com's Home, which offers to install it (?install).
+  // The installed app answers ifizbox:// (no universal links yet). Try it; if the page is still in front after a
+  // few seconds (iFizBox missing, or the user cancelled iOS's "Open in iFizBox?"), offer to install it. Never
+  // navigate away on a timer: iOS's open prompt can outlast it, and the app would open with Safari redirecting behind.
+  const dlg = $('nofiz');
+  const away = () => { if (dlg.open) dlg.close(); clearTimeout(away.t); };
+  addEventListener('pagehide', away);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) away(); });
   $('ifizbox').href = 'https://ifizbox.com/?install';
   $('ifizbox').onclick = (e) => {
     e.preventDefault();
-    let left = false;
-    const away = () => { left = true; };
-    addEventListener('pagehide', away, { once: true });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) left = true; }, { once: true });
     location.href = 'ifizbox://add?url=' + q;
-    setTimeout(() => { if (!left && !document.hidden) location.href = $('ifizbox').href; }, 1500);
+    clearTimeout(away.t);
+    away.t = setTimeout(() => { if (!document.hidden) dlg.showModal(); }, 2500);
   };
+  $('nofiz-no').onclick = () => dlg.close();
   $('feather').href = 'feather://source/' + src;
   $('altstore').href = 'altstore://source?url=' + q;
   $('sidestore').href = 'sidestore://source?url=' + q;
