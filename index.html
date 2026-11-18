@@ -6,59 +6,106 @@
 <title>FIZL0 Apps</title>
 <link rel="icon" href="https://avatars.githubusercontent.com/u/48865825?v=4">
 <link rel="apple-touch-icon" href="https://avatars.githubusercontent.com/u/48865825?v=4">
-<meta name="description" content="Add the FIZL0 source to AltStore, SideStore or Feather to install and update every FIZL0 iPhone / iPad app.">
+<meta name="description" content="Add the FIZL0 source to iFizBox, Feather, AltStore or SideStore to install and update every FIZL0 iPhone / iPad app.">
 <style>
-  :root { --ink: #1b1d22; --paper: #f6f3ea; --panel: #fff; --muted: #4c5260; --green: #2fae4a; color-scheme: light; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --ink: #ecebe6; --paper: #15171b; --panel: #22252b; --muted: #a7acb6; color-scheme: dark; }
+  :root {
+    --bg: #f2f4f7; --card: #fff; --ink: #14171c; --muted: #5d6573; --line: rgba(20,23,28,.08);
+    --accent: #1c8cda; --accent-deep: #1d5488; color-scheme: light;
   }
-  :root[data-theme="dark"] { --ink: #ecebe6; --paper: #15171b; --panel: #22252b; --muted: #a7acb6; color-scheme: dark; }
-  body { margin: 0; background: var(--paper); color: var(--ink); font: 500 16px/1.5 ui-rounded, system-ui, sans-serif; }
-  main { max-width: 520px; margin: 0 auto; padding: max(24px, env(safe-area-inset-top)) 16px 32px; }
-  h1 { margin: 0 0 8px; font-size: 1.5em; }
-  .muted { color: var(--muted); font-size: .92em; }
-  .btn { display: block; box-sizing: border-box; width: 100%; margin: 10px 0; padding: .8em 1em; border-radius: 999px;
-         border: 3px solid var(--ink); background: var(--panel); color: var(--ink); font: inherit; font-weight: 800;
-         text-align: center; text-decoration: none; cursor: pointer; }
-  .btn.main { background: var(--green); color: #fff; }
-  code { display: block; overflow-wrap: anywhere; padding: .6em .8em; border-radius: 10px; background: var(--panel);
-         border: 2px solid var(--muted); font-size: .85em; }
-  ul { list-style: none; padding: 0; }
-  li { display: flex; gap: 12px; align-items: center; margin: 10px 0; }
-  li img { width: 48px; height: 48px; border-radius: 11px; border: 2px solid var(--ink); }
-  a { color: inherit; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #0e1116; --card: #191d24; --ink: #eef1f5; --muted: #98a1ae; --line: rgba(255,255,255,.08); color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #0e1116; --card: #191d24; --ink: #eef1f5; --muted: #98a1ae; --line: rgba(255,255,255,.08); color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.45 system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  main { max-width: 560px; margin: 0 auto; padding: max(28px, env(safe-area-inset-top)) 16px max(40px, env(safe-area-inset-bottom)); }
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  header img { width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 0 0 1px var(--line); }
+  h1 { margin: 0; font-size: 1.6rem; letter-spacing: -.02em; line-height: 1.15; }
+  h2 { margin: 28px 4px 10px; font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  p { margin: 4px 0 0; }
+  .muted { color: var(--muted); font-size: .9rem; }
+  .card { background: var(--card); border-radius: 18px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 0 0 1px var(--line); }
+  .hero { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 16px; text-decoration: none; color: #fff;
+          background: linear-gradient(135deg, var(--accent), var(--accent-deep)); box-shadow: 0 6px 18px rgba(28,140,218,.3); }
+  .hero img { width: 48px; height: 48px; border-radius: 11px; flex: none; }
+  .hero b { display: block; font-size: 1.05rem; }
+  .hero span { font-size: .85rem; opacity: .85; }
+  .hero::after { content: "›"; margin-left: auto; font-size: 1.8rem; line-height: 1; opacity: .8; }
+  .hero:active, .btn:active { transform: scale(.98); }
+  .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+  .btn { display: block; padding: .7em .4em; border-radius: 12px; border: 0; background: var(--bg); color: var(--accent);
+         font: 600 .92rem/1.2 inherit; font-family: inherit; text-align: center; text-decoration: none; cursor: pointer; transition: transform .1s; }
+  .url { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 4px 4px 4px 12px; border-radius: 12px; background: var(--bg); }
+  .url code { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .82rem; color: var(--muted); }
+  .url .btn { flex: none; padding: .55em .9em; background: var(--card); }
+  .apps { list-style: none; margin: 0; padding: 0 16px; }
+  .apps li { display: flex; gap: 14px; align-items: center; padding: 14px 0; }
+  .apps li + li { border-top: 1px solid var(--line); }
+  .apps img { width: 60px; height: 60px; border-radius: 14px; flex: none; box-shadow: 0 0 0 1px var(--line); background: var(--bg); }
+  .apps .name { font-weight: 600; }
+  .apps .meta { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+  .tag { display: inline-block; padding: 1px 7px; margin-right: 6px; border-radius: 6px; font-size: .75rem; font-weight: 600; color: #fff; }
+  footer { margin: 20px 4px 0; }
 </style>
 </head>
 <body>
 <main>
-  <h1><img src="https://avatars.githubusercontent.com/u/48865825?v=4" alt="" style="width:48px;height:48px;border-radius:50%;vertical-align:middle;margin-right:10px;border:2px solid var(--ink)">FIZL0 apps for iPhone&nbsp;/&nbsp;iPad</h1>
-  <p>Add this source to your sideloading app once, then install any of the apps below and get every update from there.</p>
-  <a class="btn main" id="feather">Add to Feather</a>
-  <a class="btn" id="altstore">Add to AltStore</a>
-  <a class="btn" id="sidestore">Add to SideStore</a>
-  <button class="btn" id="copy" type="button">Copy source URL</button>
-  <code id="url"></code>
-  <p class="muted">Nothing happens when you tap? Open this page in Safari on the iPhone with the app installed, or copy
-    the URL and add it under Sources in the app.</p>
-  <ul id="apps"></ul>
+  <header>
+    <img src="https://avatars.githubusercontent.com/u/48865825?v=4" alt="">
+    <div><h1>FIZL0 Apps</h1><p class="muted">Open remasters for iPhone &amp; iPad</p></div>
+  </header>
+
+  <div class="card">
+    <a class="hero" id="ifizbox">
+      <img src="https://ifizbox.com/icons/icon-180.png" alt="">
+      <div><b>Add to iFizBox</b><span>Get every app below, with updates</span></div>
+    </a>
+    <div class="row">
+      <a class="btn" id="feather">Feather</a>
+      <a class="btn" id="altstore">AltStore</a>
+      <a class="btn" id="sidestore">SideStore</a>
+    </div>
+    <div class="url"><code id="url"></code><button class="btn" id="copy" type="button">Copy</button></div>
+  </div>
+
+  <h2>Apps</h2>
+  <ul class="apps card" id="apps"></ul>
+
+  <footer class="muted">Nothing happens when you tap? Open this page in Safari on the iPhone with the app installed,
+    or copy the URL and add it under Sources in the app.</footer>
 </main>
 <script>
   const src = new URL('source.json', location.href).href;
   const q = encodeURIComponent(src);
-  document.getElementById('url').textContent = src;
-  document.getElementById('feather').href = 'feather://source/' + src;
-  document.getElementById('altstore').href = 'altstore://source?url=' + q;
-  document.getElementById('sidestore').href = 'sidestore://source?url=' + q;
-  const copy = document.getElementById('copy');
-  copy.onclick = () => navigator.clipboard.writeText(src).then(() => { copy.textContent = 'Copied'; },
-    () => { getSelection().selectAllChildren(document.getElementById('url')); copy.textContent = 'Select and copy the URL below'; });
+  const $ = (id) => document.getElementById(id);
+  $('url').textContent = src;
+  // The website's /add link works anywhere; the installed app only answers cydian:// (no universal links yet),
+  // so try that first and fall back to the website if the page is still showing.
+  const web = 'https://ifizbox.com/add?url=' + q;
+  $('ifizbox').href = web;
+  $('ifizbox').onclick = (e) => {
+    e.preventDefault();
+    location.href = 'cydian://add?url=' + q;
+    setTimeout(() => { if (document.visibilityState === 'visible') location.href = web; }, 1500);
+  };
+  $('feather').href = 'feather://source/' + src;
+  $('altstore').href = 'altstore://source?url=' + q;
+  $('sidestore').href = 'sidestore://source?url=' + q;
+  $('copy').onclick = () => navigator.clipboard.writeText(src).then(() => { $('copy').textContent = 'Copied'; },
+    () => getSelection().selectAllChildren($('url')));
+  const mb = (n) => n ? (n / 1e6).toFixed(n < 1e8 ? 1 : 0) + ' MB' : '';
   fetch('source.json').then(r => r.json()).then(s => {
     for (const a of s.apps) {
-      const li = document.createElement('li'), img = document.createElement('img'), t = document.createElement('div');
-      img.src = a.iconURL; img.alt = '';
-      t.innerHTML = '<b></b> <span class="muted"></span><br><span class="muted"></span>';
-      t.children[0].textContent = a.name; t.children[1].textContent = a.version; t.children[3].textContent = a.subtitle || '';
-      li.append(img, t); document.getElementById('apps').append(li);
+      const li = document.createElement('li');
+      li.innerHTML = '<img alt="" loading="lazy"><div><div class="name"></div><div class="muted"></div><div class="meta"><span class="tag"></span><span></span></div></div>';
+      li.querySelector('img').src = a.iconURL;
+      li.querySelector('.name').textContent = a.name;
+      li.querySelector('.muted').textContent = a.subtitle || '';
+      const tag = li.querySelector('.tag');
+      tag.textContent = 'v' + a.version; tag.style.background = a.tintColor || 'var(--accent)';
+      tag.nextSibling.textContent = [mb(a.size), a.versions?.[0]?.minOSVersion && 'iOS ' + a.versions[0].minOSVersion + '+'].filter(Boolean).join(' · ');
+      $('apps').append(li);
     }
   }).catch(() => {});
 </script>
