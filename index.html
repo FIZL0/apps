@@ -80,14 +80,17 @@
   const q = encodeURIComponent(src);
   const $ = (id) => document.getElementById(id);
   $('url').textContent = src;
-  // The website's /add link works anywhere; the installed app only answers cydian:// (no universal links yet),
-  // so try that first and fall back to the website if the page is still showing.
-  const web = 'https://ifizbox.com/add?url=' + q;
-  $('ifizbox').href = web;
+  // The installed app only answers cydian:// (no universal links yet). Try it; if Safari never went to the
+  // background, iFizBox isn't installed: open ifizbox.com's Home, which offers to install it (?install).
+  $('ifizbox').href = 'https://ifizbox.com/?install';
   $('ifizbox').onclick = (e) => {
     e.preventDefault();
+    let left = false;
+    const away = () => { left = true; };
+    addEventListener('pagehide', away, { once: true });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) left = true; }, { once: true });
     location.href = 'cydian://add?url=' + q;
-    setTimeout(() => { if (document.visibilityState === 'visible') location.href = web; }, 1500);
+    setTimeout(() => { if (!left && !document.hidden) location.href = $('ifizbox').href; }, 1500);
   };
   $('feather').href = 'feather://source/' + src;
   $('altstore').href = 'altstore://source?url=' + q;
